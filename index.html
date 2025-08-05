@@ -131,57 +131,68 @@
             position: absolute; /* Default off-screen position */
             left: -9999px; 
             top: -9999px; 
-            background-color: white;
             border-radius: 30px;
             overflow: hidden;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
             direction: rtl;
             text-align: right;
             box-sizing: border-box;
-            padding: 30px;
-            /* This background image is for the card itself, not the body */
-            background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns="http://www.w3.org/2000/svg" width="1011" height="639" viewBox="0 0 1011 639"%3e%3cpath fill="%230b0b14" d="M0 0h1011v639H0z"/%3e%3cg fill="%2360a5fa"%3e%3cpath d="M25 10a1 1 0 0 1 1 1v1h-1a1 1 0 0 1-1-1v-1h1zM50 40a1 1 0 0 1 1 1v1h-1a1 1 0 0 1-1-1v-1h1zM75 70a1 1 0 0 1 1 1v1h-1a1 1 0 0 1-1-1v-1h1z"/%3e%3cpath d="M50 10a1 1 0 0 1 1 1v1h-1a1 1 0 0 1-1-1v-1h1zM75 40a1 1 0 0 1 1 1v1h-1a1 1 0 0 1-1-1v-1h1zM25 70a1 1 0 0 1 1 1v1h-1a1 1 0 0 1-1-1v-1h1z"/%3e%3cpath d="M12.5 25a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5zM37.5 50a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5zM62.5 75a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5z"/%3e%3cpath d="M37.5 25a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5zM62.5 50a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5zM87.5 75a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5z"/%3e%3cpath d="M25 50a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5zM50 75a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5z"/%3e%3cpath d="M50 25a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5zM75 50a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5z"/%3e%3cpath d="M87.5 50a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5zM12.5 75a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5z"/%3e%3c/g%3e%3c/svg%3e') ;
-            background-size: 1011px 639px;
-            background-repeat: no-repeat;
+            font-family: 'Noto Sans Arabic', sans-serif;
+            
+            /* Updated background for the card */
+            background-color: #4a148c; /* Dark purple background */
+            background-image: radial-gradient(circle at 15% 25%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                              radial-gradient(circle at 85% 75%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                              radial-gradient(circle at 40% 60%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                              radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                              radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px; /* Adjust for star density and size */
         }
 
-        #card-inner {
-            background-color: white;
-            border-radius: 30px;
+        /* Absolutely positioned header elements */
+        #card-logo-text-card {
+            position: absolute;
+            top: 45px;
+            left: 65px; /* Visual top-left due to RTL */
+            font-size: 24px;
+            font-weight: 700;
+            color: rgb(175, 46, 255);
+            z-index: 2; /* Ensure it's above white area */
+        }
+
+        #card-title-card {
+            position: absolute;
+            top: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 36px;
+            font-weight: 700;
+            color: #FFD700; /* Yellow */
+            z-index: 2;
+        }
+
+        #card-watermark-card {
+            position: absolute;
+            top: 45px;
+            right: 65px; /* Visual top-right due to RTL */
+            font-size: 24px;
+            font-weight: 700;
+            color: #5b21b6; /* Changed to purple */
+            z-index: 2;
+        }
+
+        #card-white-area {
             position: absolute;
             top: 25px;
             left: 25px;
             right: 25px;
             bottom: 25px;
+            background-color: white;
+            border-radius: 40px; /* Increased border-radius */
             display: flex;
-            padding: 40px;
+            padding: 60px; /* Increased padding */
             box-sizing: border-box;
             align-items: center;
-        }
-
-        #card-header {
-            position: absolute;
-            top: 25px;
-            left: 25px;
-            right: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 40px;
-            box-sizing: border-box;
-            width: calc(100% - 50px);
-        }
-
-        #card-logo {
-            font-size: 24px;
-            color: white;
-            font-weight: 700;
-        }
-
-        #card-watermark {
-            font-size: 24px;
-            color: white;
-            font-weight: 700;
         }
 
         .card-left {
@@ -189,27 +200,22 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center; /* Center content vertically */
             text-align: center;
-            gap: 20px;
+            gap: 20px; /* Existing gap */
         }
-
-        #card-character-img {
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 5px solid #fff;
-            box-shadow: 0 0 0 5px #f0f2f5;
-        }
+        
+        /* Removed character image styling as it's no longer used */
 
         #card-user-name {
-            font-size: 60px;
+            font-size: 72px; /* Increased font size */
             font-weight: 700;
             color: #5b21b6;
+            margin-bottom: 20px; /* Increased space below name */
         }
 
         #card-character-name {
-            font-size: 30px;
+            font-size: 24px; /* Slightly smaller */
             font-weight: 400;
             color: #5b21b6;
         }
@@ -219,33 +225,61 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            padding-right: 40px;
+            padding-right: 40px; /* This will be padding-left visually due to RTL */
         }
 
         .card-info-tab {
             width: 100%;
-            padding: 20px 30px;
-            border-radius: 20px;
-            font-size: 32px;
+            padding: 0 40px; /* Reset padding as transform handles vertical alignment */
+            border-radius: 25px; /* Adjusted border-radius */
+            font-size: 40px; /* Further increased font size */
             font-weight: 700;
-            color: white;
+            display: flex; /* Added flex for vertical centering */
+            align-items: center; /* Vertically center content */
+            justify-content: center; /* Horizontally center content */
+            box-sizing: border-box; /* Include padding in width/height */
+            height: 90px; /* Increased fixed height to ensure consistent vertical centering with larger font */
         }
 
-        #card-platform { background-color: #60a5fa; }
+        .tab-text {
+            line-height: 1.2;
+            transform: translateY(-20px); /* Shift text up */
+            display: inline-block;
+        }
+
+        /* Define base colors for outlines and text */
+        :root {
+            --platform-base: #2196F3; /* More saturated blue */
+            --rank-base: #F44336;     /* More saturated red/pink */
+            --role-base: #4CAF50;     /* More saturated green */
+            --gamemode-base: #FFC107; /* More saturated yellow */
+        }
+
+        #card-platform { 
+            background-color: #E3F2FD; /* Whitened color */
+            border: 4px solid var(--platform-base); /* Outline */
+            color: var(--platform-base); /* Text color matches outline */
+        } 
         #card-rank { 
-            background-color: #e879f9; 
-            display: flex; /* Use flexbox to align image and text */
-            align-items: center; /* Vertically center them */
-            justify-content: flex-end; /* Align to the right for RTL */
-            gap: 10px; /* Space between image and text */
+            background-color: #FFEBEE; /* Whitened color */
+            border: 4px solid var(--rank-base); /* Outline */
+            color: var(--rank-base); /* Text color matches outline */
         }
-        #card-rank-img {
-            width: 40px; /* Adjust size as needed */
-            height: 40px; /* Adjust size as needed */
-            object-fit: contain;
+        /* Removed #card-rank-img styling as the image is removed */
+        #card-rank-text {
+            text-align: center; /* Center text */
+            color: inherit; /* Inherit color from parent */
         }
-        #card-role { background-color: #2dd4bf; }
-        #card-gamemode { background-color: #fcd34d; }
+        #card-role { 
+            background-color: #E8F5E9; /* Whitened color */
+            border: 4px solid var(--role-base); /* Outline */
+            color: var(--role-base); /* Text color matches outline */
+        } 
+        #card-gamemode { 
+            background-color: #FFFDE7; /* Whitened color */
+            border: 4px solid var(--gamemode-base); /* Outline */
+            color: var(--gamemode-base); /* Text color matches outline */
+        }
 
         .loader {
             display: none;
@@ -263,7 +297,7 @@
         }
     </style>
 </head>
-<body class="p-4 flex flex-col items-center">
+<body>
 
     <div class="container mt-8">
         <h1 class="text-3xl font-bold text-center">صانع بطاقة عضوية Marvel Rivals</h1>
@@ -286,15 +320,25 @@
         <div class="grid-selection">
             <div class="input-group">
                 <label for="role-select">الدور</label>
-                <select id="role-select" class="text-lg"></select>
+                <select id="role-select" class="text-lg">
+                    <option value="سبورت">سبورت</option>
+                    <option value="تانك">تانك</option>
+                    <option value="دي بي اس">دي بي اس</option>
+                </select>
             </div>
             <div class="input-group">
                 <label for="platform-select">المنصة</label>
-                <select id="platform-select" class="text-lg"></select>
+                <select id="platform-select" class="text-lg">
+                    <option value="كونسل">كونسل</option>
+                    <option value="بي سي">بي سي</option>
+                </select>
             </div>
             <div class="input-group">
                 <label for="gamemode-select">المود</label>
-                <select id="gamemode-select" class="text-lg"></select>
+                <select id="gamemode-select" class="text-lg">
+                    <option value="كويك بلاي">كويك بلاي</option>
+                    <option value="كومبتتيف">كومبتتيف</option>
+                </select>
             </div>
         </div>
         
@@ -307,84 +351,82 @@
 
     <!-- The hidden card element that will be generated and downloaded -->
     <div id="card-to-print">
-        <div id="card-header">
-            <span id="card-logo">مجتمع MARVEL RIVALS العربي</span>
-            <span id="card-watermark">@okayloy</span>
-        </div>
-        <div id="card-inner">
+        <!-- Header elements are now directly children of card-to-print for absolute positioning -->
+        <span id="card-logo-text-card">مجتمع MARVEL RIVALS العربي</span>
+        <span id="card-watermark-card">🎨 @okayloy</span>
+        
+        <div id="card-white-area">
             <div class="card-left">
-                <img id="card-character-img" src="" alt="Selected character">
+                <!-- Removed img tag for character image -->
                 <div>
                     <div id="card-user-name" class="font-bold"></div>
                     <div id="card-character-name"></div>
                 </div>
             </div>
             <div class="card-right">
-                <div id="card-platform" class="card-info-tab"></div>
-                <div id="card-rank" class="card-info-tab">
-                    <img id="card-rank-img" src="" alt="Rank Icon">
-                    <span id="card-rank-text"></span>
-                </div>
-                <div id="card-role" class="card-info-tab"></div>
-                <div id="card-gamemode" class="card-info-tab"></div>
+                <div id="card-platform" class="card-info-tab"><span class="tab-text"></span></div>
+                <div id="card-rank" class="card-info-tab"><span class="tab-text" id="card-rank-text"></span></div>
+                <div id="card-role" class="card-info-tab"><span class="tab-text"></span></div>
+                <div id="card-gamemode" class="card-info-tab"><span class="tab-text"></span></div>
             </div>
         </div>
     </div>
 
     <script>
+        // Character and Rank data with external URLs
         const characters = [
-            { name: 'كابتن أمريكا', path: 'captain-america_avatar.png' },
-            { name: 'دكتور سترينج', path: 'doctor-strange_avatar.png' },
-            { name: 'إيما فروست', path: 'emma-frost_avatar.png' },
-            { name: 'غروت', path: 'groot_avatar.png' },
-            { name: 'هالك', path: 'hulk_avatar.png' },
-            { name: 'ماجنيتو', path: 'magneto_avatar.png' },
-            { name: 'بَني باركر', path: 'peni-parker_avatar.png' },
-            { name: 'ذا ثينغ', path: 'the-thing_avatar.png' },
-            { name: 'ثور', path: 'thor_avatar.png' },
-            { name: 'فينوم', path: 'venom_avatar.png' },
-            { name: 'النمر الأسود', path: 'black-panther_avatar.png' },
-            { name: 'الأرملة السوداء', path: 'black-widow_avatar.png' },
-            { name: 'هوك آي', path: 'hawkeye_avatar.png' },
-            { name: 'هيلا', path: 'hela_avatar.png' },
-            { name: 'الشعلة البشرية', path: 'human-torch_avatar.png' },
-            { name: 'آيرون فيست', path: 'iron-fist_avatar.png' },
-            { name: 'آيرون مان', path: 'iron-man_avatar.png' },
-            { name: 'ماجيك', path: 'magik_avatar.png' },
-            { name: 'مستر فانتاستك', path: 'mister-fantastic_avatar.png' },
-            { name: 'مون نايت', path: 'moon-knight_avatar.png' },
-            { name: 'نامور', path: 'namor_avatar.png' },
-            { name: 'فينيx', path: 'phoenix_avatar.png' },
-            { name: 'سايلوك', path: 'psylocke_avatar.png' },
-            { name: 'سكارليت ويتش', path: 'scarlet-witch_avatar.png' },
-            { name: 'سبايدر مان', path: 'spider-man_avatar.png' },
-            { name: 'غيرل السنجاب', path: 'squirrel-girl_avatar.png' },
-            { name: 'ستار-لورد', path: 'star-lord_avatar.png' },
-            { name: 'ستورم', path: 'storm_avatar.png' },
-            { name: 'ذا بانشر', path: 'the-punisher_avatar.png' },
-            { name: 'وينتر سولجر', path: 'winter-soldier_avatar.png' },
-            { name: 'وولفرين', path: 'wolverine_avatar.png' },
-            { name: 'آدم وورلوك', path: 'adam-warlock_avatar.png' },
-            { name: 'كلوك & داجر', path: 'cloak-and-dagger_avatar.png' },
-            { name: 'المرأة الخفية', path: 'invisible-woman_avatar.png' },
-            { name: 'جيف (سمكة القرش الصغيرة)', path: 'jeff-the-land-shark_avatar.png' },
-            { name: 'لوكي', path: 'loki_avatar.png' },
-            { name: 'لونا سنو', path: 'luna-snow_avatar.png' },
-            { name: 'مانتيس', path: 'mantis_avatar.png' },
-            { name: 'روكيت راكون', path: 'rocket-raccoon_avatar.png' },
-            { name: 'ألترون', path: 'ultron_avatar.png' }
+            { name: 'كابتن أمريكا', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/captain-america_avatar.png' },
+            { name: 'دكتور سترينج', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/doctor-strange_avatar.png' },
+            { name: 'إيما فروست', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/emma-frost_avatar.png' },
+            { name: 'غروت', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/groot_avatar.png' },
+            { name: 'هالك', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/hulk_avatar.png' },
+            { name: 'ماجنيتو', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/magneto_avatar.png' },
+            { name: 'بَني باركر', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/peni-parker_avatar.png' },
+            { name: 'ذا ثينغ', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/the-thing_avatar.png' },
+            { name: 'ثور', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/thor_avatar.png' },
+            { name: 'فينوم', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/venom_avatar.png' },
+            { name: 'النمر الأسود', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/black-panther_avatar.png' },
+            { name: 'الأرملة السوداء', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/black-widow_avatar.png' },
+            { name: 'هوك آي', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/hawkeye_avatar.png' },
+            { name: 'هيلا', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/hela_avatar.png' },
+            { name: 'الشعلة البشرية', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/human-torch_avatar.png' },
+            { name: 'آيرون فيست', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/iron-fist_avatar.png' },
+            { name: 'آيرون مان', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/iron-man_avatar.png' },
+            { name: 'ماجيك', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/magik_avatar.png' },
+            { name: 'مستر فانتاستك', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/mister-fantastic_avatar.png' },
+            { name: 'مون نايت', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/moon-knight_avatar.png' },
+            { name: 'نامور', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/namor_avatar.png' },
+            { name: 'فينيx', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/phoenix_avatar.png' },
+            { name: 'سايلوك', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/psylocke_avatar.png' },
+            { name: 'سكارليت ويتش', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/scarlet-witch_avatar.png' },
+            { name: 'سبايدر مان', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/spider-man_avatar.png' },
+            { name: 'غيرل السنجاب', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/squirrel-girl_avatar.png' },
+            { name: 'ستار-لورد', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/star-lord_avatar.png' },
+            { name: 'ستورم', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/storm_avatar.png' },
+            { name: 'ذا بانشر', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/the-punisher_avatar.png' },
+            { name: 'وينتر سولجر', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/winter-soldier_avatar.png' },
+            { name: 'وولفرين', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/wolverine_avatar.png' },
+            { name: 'آدم وورلوك', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/adam-warlock_avatar.png' },
+            { name: 'كلوك & داجر', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/cloak-and-dagger_avatar.png' },
+            { name: 'المرأة الخفية', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/invisible-woman_avatar.png' },
+            { name: 'جيف (سمكة القرش الصغيرة)', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/jeff-the-land-shark_avatar.png' },
+            { name: 'لوكي', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/loki_avatar.png' },
+            { name: 'لونا سنو', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/luna-snow_avatar.png' },
+            { name: 'مانتيس', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/mantis_avatar.png' },
+            { name: 'روكيت راكون', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/rocket-raccoon_avatar.png' },
+            { name: 'ألترون', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/hero-icons-avatars/ultron_avatar.png' }
         ];
 
         const ranks = [
-            { arabic: 'برونز', english: 'Bronze', path: '1 Bronze Rank.png' },
-            { arabic: 'سلفر', english: 'Silver', path: '2 Silver Rank.png' },
-            { arabic: 'قولد', english: 'Gold', path: '3 Gold Rank.png' },
-            { arabic: 'بلات', english: 'Platinum', path: '4 Platinum Rank.png' },
-            { arabic: 'داي', english: 'Diamond', path: '5 Diamond Rank.png' },
-            { arabic: 'قراند', english: 'Grandmaster', path: '6 Grandmaster Rank.png' },
-            { arabic: 'سيل', english: 'Celestial', path: '7 Celestial Rank.webp' },
-            { arabic: 'اترنيتي', english: 'Eternity', path: '8 Eternity Rank.png' },
-            { arabic: 'ون ابوف اول', english: 'One Above All', path: '9 One Above All Rank.png' }
+            { arabic: 'برونز', english: 'Bronze', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/rank-logos/1%20Bronze%20Rank.png' },
+            { arabic: 'سلفر', english: 'Silver', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/rank-logos/2%20Silver%20Rank.png' },
+            { arabic: 'قولد', english: 'Gold', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/rank-logos/3%20Gold%20Rank.png' },
+            { arabic: 'بلات', english: 'Platinum', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/rank-logos/4%20Platinum%20Rank.png' },
+            { arabic: 'داي', english: 'Diamond', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/rank-logos/5%20Diamond%20Rank.png' },
+            { arabic: 'قراند', english: 'Grandmaster', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/rank-logos/6%20Grandmaster%20Rank.png' },
+            { arabic: 'سيل', english: 'Celestial', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/rank-logos/7%20Celestial%20Rank.png' },
+            { arabic: 'اترنيتي', english: 'Eternity', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/rank-logos/8%20Eternity%20Rank.png' },
+            { arabic: 'ون ابوف اول', english: 'One Above All', path: 'https://rivalskins.com/wp-content/uploads/marvel-assets/assets/rank-logos/9%20One%20Above%20All%20Rank.png' }
         ];
 
         const roles = [
@@ -416,21 +458,22 @@
         const cardToPrint = document.getElementById('card-to-print');
         const loader = document.getElementById('loader');
 
-        // Function to convert an image URL to a Base64 data URL
+        // Function to convert an image URL to a Base64 data URL (still needed for grid selection images)
         async function imageToBase64(url) {
             return new Promise((resolve, reject) => {
                 const img = new Image();
-                img.crossOrigin = 'Anonymous'; // Important for CORS if images were from different origin, good practice for local too
+                img.crossOrigin = 'Anonymous'; // Essential for CORS when fetching from external URLs
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
                     canvas.width = img.width;
                     canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0);
-                    resolve(canvas.toDataURL('image/png')); // Convert to PNG data URL
+                    const dataURL = canvas.toDataURL('image/png');
+                    resolve(dataURL);
                 };
-                img.onerror = (error) => {
-                    console.error(`Failed to load image for Base64 conversion: ${url}`, error);
+                img.onerror = (err) => {
+                    console.error(`Failed to load image for Base64 conversion: ${url}`, err);
                     // Provide a transparent 1x1 pixel fallback on error
                     resolve('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='); 
                 };
@@ -443,7 +486,7 @@
             characters.forEach(char => {
                 const item = document.createElement('div');
                 item.className = 'grid-item';
-                item.innerHTML = `<img src="hero-icons/${char.path}" alt="${char.name}"><span class="text-sm font-bold">${char.name}</span>`;
+                item.innerHTML = `<img src="${char.path}" alt="${char.name}"><span class="text-sm font-bold">${char.name}</span>`;
                 item.addEventListener('click', () => {
                     document.querySelectorAll('#character-grid .grid-item').forEach(el => el.classList.remove('selected'));
                     item.classList.add('selected');
@@ -456,7 +499,7 @@
             ranks.forEach(rank => {
                 const item = document.createElement('div');
                 item.className = 'grid-item';
-                item.innerHTML = `<img src="rank-photos/${rank.path}" alt="${rank.arabic}"><span class="text-sm font-bold">${rank.arabic}</span>`;
+                item.innerHTML = `<img src="${rank.path}" alt="${rank.arabic}"><span class="text-sm font-bold">${rank.arabic}</span>`;
                 item.addEventListener('click', () => {
                     document.querySelectorAll('#rank-grid .grid-item').forEach(el => el.classList.remove('selected'));
                     item.classList.add('selected');
@@ -490,37 +533,23 @@
         async function generateCardContent() { 
             const userName = nameInput.value || 'اسمك هنا';
             const characterName = selectedCharacter ? `الشخصية: ${selectedCharacter.name}` : 'الشخصية: لم يتم الاختيار';
-            const characterImgSrc = selectedCharacter ? `hero-icons/${selectedCharacter.path}` : '';
             const rankText = selectedRank ? `الرانك: ${selectedRank.arabic}` : 'الرانك: لم يتم الاختيار';
-            const rankImgSrc = selectedRank ? `rank-photos/${selectedRank.path}` : ''; 
             const roleText = `الرول: ${roleSelect.value}`;
             const platformText = `المنصة: ${platformSelect.value}`;
             const gamemodeText = `المود: ${gamemodeSelect.value}`;
 
+            // Update text content for the span elements
+            document.querySelector('#card-platform .tab-text').textContent = platformText;
+            document.querySelector('#card-rank .tab-text').textContent = rankText;
+            document.querySelector('#card-role .tab-text').textContent = roleText;
+            document.querySelector('#card-gamemode .tab-text').textContent = gamemodeText;
+
             document.getElementById('card-user-name').textContent = userName;
             document.getElementById('card-character-name').textContent = characterName;
-
-            if (characterImgSrc) {
-                const base64Char = await imageToBase64(characterImgSrc);
-                document.getElementById('card-character-img').src = base64Char;
-            } else {
-                document.getElementById('card-character-img').src = ''; 
-            }
-
-            document.getElementById('card-rank-text').textContent = rankText;
-            if (rankImgSrc) {
-                const base64Rank = await imageToBase64(rankImgSrc);
-                document.getElementById('card-rank-img').src = base64Rank;
-            } else {
-                document.getElementById('card-rank-img').src = ''; 
-            }
-
-            document.getElementById('card-platform').textContent = platformText;
-            document.getElementById('card-role').textContent = roleText;
-            document.getElementById('card-gamemode').textContent = gamemodeText;
         }
 
         function waitForImagesToLoad(element) {
+            // This function is now only relevant for the grid selection images, not the card output
             const images = element.querySelectorAll('img');
             const promises = [];
 
@@ -528,7 +557,7 @@
                 if (!img.complete) {
                     promises.push(new Promise((resolve, reject) => {
                         img.onload = resolve;
-                        img.onerror = reject;
+                        img.onerror = reject; 
                     }));
                 }
             });
@@ -555,24 +584,26 @@
 
             loader.style.display = 'flex';
 
-            await generateCardContent();
+            await generateCardContent(); 
 
             // Temporarily make the card visible off-screen for html2canvas to capture
-            cardToPrint.style.position = 'fixed';
+            cardToPrint.style.position = 'fixed'; 
             cardToPrint.style.left = '0px';
             cardToPrint.style.top = '-9999px';
-            cardToPrint.style.opacity = '1'; // Ensure it's fully visible to html2canvas
+            cardToPrint.style.opacity = '1'; 
 
             try {
-                await waitForImagesToLoad(cardToPrint);
+                await new Promise(resolve => setTimeout(resolve, 50)); 
+                // No need to wait for images inside cardToPrint as they are removed
+                // await waitForImagesToLoad(cardToPrint); 
 
                 const canvas = await html2canvas(cardToPrint, {
                     width: 1011,
                     height: 639,
-                    useCORS: true,
-                    allowTaint: true,
+                    useCORS: true, 
+                    allowTaint: true, 
                     backgroundColor: null,
-                    scale: 1 // Use scale 1 for direct pixel capture as per card dimensions
+                    scale: 1 
                 });
 
                 const dataUrl = canvas.toDataURL("image/png");
@@ -597,11 +628,10 @@
                     document.body.removeChild(messageBox);
                 }, 5000);
             } finally {
-                // Reset card position and visibility regardless of success or failure
-                cardToPrint.style.position = 'absolute'; // Revert to original position type
+                cardToPrint.style.position = 'absolute'; 
                 cardToPrint.style.left = '-9999px';
                 cardToPrint.style.top = '-9999px';
-                cardToPrint.style.opacity = '0'; // Hide it again
+                cardToPrint.style.opacity = '0';
                 loader.style.display = 'none';
             }
         }
