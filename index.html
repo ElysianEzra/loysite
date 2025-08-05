@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>loysite - Marvel Rivals Member Card Generator</title>
+    <!-- Tailwind CSS CDN for utility classes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Noto Sans Arabic for Arabic text -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <!-- html2canvas CDN for generating images from HTML -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        /* Custom CSS for the starry background and overall styling */
+        body {
+            font-family: 'Noto Sans Arabic', sans-serif;
+            background-color: #0b0b14; /* Dark blue background color */
+            background-image: radial-gradient(circle at 10% 20%, rgba(96, 165, 250, 0.2) 1px, transparent 1px),
+                              radial-gradient(circle at 70% 80%, rgba(96, 165, 250, 0.2) 1px, transparent 1px),
+                              radial-gradient(circle at 40% 50%, rgba(96, 165, 250, 0.2) 1px, transparent 1px),
+                              radial-gradient(circle at 90% 10%, rgba(96, 165, 250, 0.2) 1px, transparent 1px),
+                              radial-gradient(circle at 20% 90%, rgba(96, 165, 250, 0.2) 1px, transparent 1px);
+            background-size: 20px 20px; /* Adjust as needed for star density */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            max-width: 600px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #555;
+            text-align: right;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            text-align: right;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns="http://www.w3.org/2000/svg" width="292.4" height="292.4" viewBox="0 0 292.4 292.4"%3E%3Cpath fill="%23666" d="M287 69.4a17.6 17.6 0 0 0-13.4-6.3H18.8c-5.9 0-11.2 3.1-13.4 8.5-2.2 5.4-.5 11.6 4.6 15.2l128 114.3c4.9 4.3 12.3 4.3 17.2 0l128-114.3c5.1-3.6 6.8-9.8 4.6-15.2z"/%3E%3C/svg%3E');
+            background-repeat: no-repeat;
+            background-position: left 1rem center;
+            background-size: 0.6em;
+            padding-right: 1.5rem;
+        }
+        
+        .grid-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .grid-item {
+            background-color: #f9f9f9;
+            border: 2px solid #eee;
+            border-radius: 15px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .grid-item:hover, .grid-item.selected {
+            border-color: #5b21b6;
+            background-color: #ede9fe;
+            transform: translateY(-3px);
+        }
+
+        .grid-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        .print-btn {
+            background-color: #5b21b6;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .print-btn:hover {
+            background-color: #4c1d95;
+        }
+
+        /* --- Card Specific Styling (Hidden by default) --- */
+        #card-to-print {
+            width: 1011px;
+            height: 639px;
+            position: absolute; /* Default off-screen position */
+            left: -9999px; 
+            top: -9999px; 
+            background-color: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            direction: rtl;
+            text-align: right;
+            box-sizing: border-box;
+            padding: 30px;
+            /* This background image is for the card itself, not the body */
+            background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns="http://www.w3.org/2000/svg" width="1011" height="639" viewBox="0 0 1011 639"%3e%3cpath fill="%230b0b14" d="M0 0h1011v639H0z"/%3e%3cg fill="%2360a5fa"%3e%3cpath d="M25 10a1 1 0 0 1 1 1v1h-1a1 1 0 0 1-1-1v-1h1zM50 40a1 1 0 0 1 1 1v1h-1a1 1 0 0 1-1-1v-1h1zM75 70a1 1 0 0 1 1 1v1h-1a1 1 0 0 1-1-1v-1h1z"/%3e%3cpath d="M50 10a1 1 0 0 1 1 1v1h-1a1 1 0 0 1-1-1v-1h1zM75 40a1 1 0 0 1 1 1v1h-1a1 1 0 0 1-1-1v-1h1zM25 70a1 1 0 0 1 1 1v1h-1a1 1 0 0 1-1-1v-1h1z"/%3e%3cpath d="M12.5 25a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5zM37.5 50a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5zM62.5 75a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5z"/%3e%3cpath d="M37.5 25a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5zM62.5 50a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5zM87.5 75a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5z"/%3e%3cpath d="M25 50a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5zM50 75a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5z"/%3e%3cpath d="M50 25a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5zM75 50a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5z"/%3e%3cpath d="M87.5 50a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5zM12.5 75a.5.5 0 0 1 .5.5v.5h-.5a.5.5 0 0 1-.5-.5v-.5h.5z"/%3e%3c/g%3e%3c/svg%3e') ;
+            background-size: 1011px 639px;
+            background-repeat: no-repeat;
+        }
+
+        #card-inner {
+            background-color: white;
+            border-radius: 30px;
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            right: 25px;
+            bottom: 25px;
+            display: flex;
+            padding: 40px;
+            box-sizing: border-box;
+            align-items: center;
+        }
+
+        #card-header {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            right: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            box-sizing: border-box;
+            width: calc(100% - 50px);
+        }
+
+        #card-logo {
+            font-size: 24px;
+            color: white;
+            font-weight: 700;
+        }
+
+        #card-watermark {
+            font-size: 24px;
+            color: white;
+            font-weight: 700;
+        }
+
+        .card-left {
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 20px;
+        }
+
+        #card-character-img {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #fff;
+            box-shadow: 0 0 0 5px #f0f2f5;
+        }
+
+        #card-user-name {
+            font-size: 60px;
+            font-weight: 700;
+            color: #5b21b6;
+        }
+
+        #card-character-name {
+            font-size: 30px;
+            font-weight: 400;
+            color: #5b21b6;
+        }
+
+        .card-right {
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding-right: 40px;
+        }
+
+        .card-info-tab {
+            width: 100%;
+            padding: 20px 30px;
+            border-radius: 20px;
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+        }
+
+        #card-platform { background-color: #60a5fa; }
+        #card-rank { 
+            background-color: #e879f9; 
+            display: flex; /* Use flexbox to align image and text */
+            align-items: center; /* Vertically center them */
+            justify-content: flex-end; /* Align to the right for RTL */
+            gap: 10px; /* Space between image and text */
+        }
+        #card-rank-img {
+            width: 40px; /* Adjust size as needed */
+            height: 40px; /* Adjust size as needed */
+            object-fit: contain;
+        }
+        #card-role { background-color: #2dd4bf; }
+        #card-gamemode { background-color: #fcd34d; }
+
+        .loader {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 2rem;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="p-4 flex flex-col items-center">
+
+    <div class="container mt-8">
+        <h1 class="text-3xl font-bold text-center">صانع بطاقة عضوية Marvel Rivals</h1>
+        
+        <div class="input-group">
+            <label for="name-input">الاسم</label>
+            <input type="text" id="name-input" placeholder="اسمك هنا" class="text-lg">
+        </div>
+
+        <div class="input-group">
+            <label>الشخصية</label>
+            <div id="character-grid" class="grid-selection"></div>
+        </div>
+
+        <div class="input-group">
+            <label>الرتبة</label>
+            <div id="rank-grid" class="grid-selection"></div>
+        </div>
+
+        <div class="grid-selection">
+            <div class="input-group">
+                <label for="role-select">الدور</label>
+                <select id="role-select" class="text-lg"></select>
+            </div>
+            <div class="input-group">
+                <label for="platform-select">المنصة</label>
+                <select id="platform-select" class="text-lg"></select>
+            </div>
+            <div class="input-group">
+                <label for="gamemode-select">المود</label>
+                <select id="gamemode-select" class="text-lg"></select>
+            </div>
+        </div>
+        
+        <button id="print-btn" class="print-btn">طباعة البطاقة</button>
+    </div>
+
+    <div id="loader" class="loader">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-white"></div>
+    </div>
+
+    <!-- The hidden card element that will be generated and downloaded -->
+    <div id="card-to-print">
+        <div id="card-header">
+            <span id="card-logo">مجتمع MARVEL RIVALS العربي</span>
+            <span id="card-watermark">@okayloy</span>
+        </div>
+        <div id="card-inner">
+            <div class="card-left">
+                <img id="card-character-img" src="" alt="Selected character">
+                <div>
+                    <div id="card-user-name" class="font-bold"></div>
+                    <div id="card-character-name"></div>
+                </div>
+            </div>
+            <div class="card-right">
+                <div id="card-platform" class="card-info-tab"></div>
+                <div id="card-rank" class="card-info-tab">
+                    <img id="card-rank-img" src="" alt="Rank Icon">
+                    <span id="card-rank-text"></span>
+                </div>
+                <div id="card-role" class="card-info-tab"></div>
+                <div id="card-gamemode" class="card-info-tab"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const characters = [
+            { name: 'كابتن أمريكا', path: 'captain-america_avatar.png' },
+            { name: 'دكتور سترينج', path: 'doctor-strange_avatar.png' },
+            { name: 'إيما فروست', path: 'emma-frost_avatar.png' },
+            { name: 'غروت', path: 'groot_avatar.png' },
+            { name: 'هالك', path: 'hulk_avatar.png' },
+            { name: 'ماجنيتو', path: 'magneto_avatar.png' },
+            { name: 'بَني باركر', path: 'peni-parker_avatar.png' },
+            { name: 'ذا ثينغ', path: 'the-thing_avatar.png' },
+            { name: 'ثور', path: 'thor_avatar.png' },
+            { name: 'فينوم', path: 'venom_avatar.png' },
+            { name: 'النمر الأسود', path: 'black-panther_avatar.png' },
+            { name: 'الأرملة السوداء', path: 'black-widow_avatar.png' },
+            { name: 'هوك آي', path: 'hawkeye_avatar.png' },
+            { name: 'هيلا', path: 'hela_avatar.png' },
+            { name: 'الشعلة البشرية', path: 'human-torch_avatar.png' },
+            { name: 'آيرون فيست', path: 'iron-fist_avatar.png' },
+            { name: 'آيرون مان', path: 'iron-man_avatar.png' },
+            { name: 'ماجيك', path: 'magik_avatar.png' },
+            { name: 'مستر فانتاستك', path: 'mister-fantastic_avatar.png' },
+            { name: 'مون نايت', path: 'moon-knight_avatar.png' },
+            { name: 'نامور', path: 'namor_avatar.png' },
+            { name: 'فينيx', path: 'phoenix_avatar.png' },
+            { name: 'سايلوك', path: 'psylocke_avatar.png' },
+            { name: 'سكارليت ويتش', path: 'scarlet-witch_avatar.png' },
+            { name: 'سبايدر مان', path: 'spider-man_avatar.png' },
+            { name: 'غيرل السنجاب', path: 'squirrel-girl_avatar.png' },
+            { name: 'ستار-لورد', path: 'star-lord_avatar.png' },
+            { name: 'ستورم', path: 'storm_avatar.png' },
+            { name: 'ذا بانشر', path: 'the-punisher_avatar.png' },
+            { name: 'وينتر سولجر', path: 'winter-soldier_avatar.png' },
+            { name: 'وولفرين', path: 'wolverine_avatar.png' },
+            { name: 'آدم وورلوك', path: 'adam-warlock_avatar.png' },
+            { name: 'كلوك & داجر', path: 'cloak-and-dagger_avatar.png' },
+            { name: 'المرأة الخفية', path: 'invisible-woman_avatar.png' },
+            { name: 'جيف (سمكة القرش الصغيرة)', path: 'jeff-the-land-shark_avatar.png' },
+            { name: 'لوكي', path: 'loki_avatar.png' },
+            { name: 'لونا سنو', path: 'luna-snow_avatar.png' },
+            { name: 'مانتيس', path: 'mantis_avatar.png' },
+            { name: 'روكيت راكون', path: 'rocket-raccoon_avatar.png' },
+            { name: 'ألترون', path: 'ultron_avatar.png' }
+        ];
+
+        const ranks = [
+            { arabic: 'برونز', english: 'Bronze', path: '1 Bronze Rank.png' },
+            { arabic: 'سلفر', english: 'Silver', path: '2 Silver Rank.png' },
+            { arabic: 'قولد', english: 'Gold', path: '3 Gold Rank.png' },
+            { arabic: 'بلات', english: 'Platinum', path: '4 Platinum Rank.png' },
+            { arabic: 'داي', english: 'Diamond', path: '5 Diamond Rank.png' },
+            { arabic: 'قراند', english: 'Grandmaster', path: '6 Grandmaster Rank.png' },
+            { arabic: 'سيل', english: 'Celestial', path: '7 Celestial Rank.webp' },
+            { arabic: 'اترنيتي', english: 'Eternity', path: '8 Eternity Rank.png' },
+            { arabic: 'ون ابوف اول', english: 'One Above All', path: '9 One Above All Rank.png' }
+        ];
+
+        const roles = [
+            { text: 'سبورت', value: 'سبورت' },
+            { text: 'تانك', value: 'تانك' },
+            { text: 'دي بي اس', value: 'دي بي اس' }
+        ];
+
+        const platforms = [
+            { text: 'كونسل', value: 'كونسل' },
+            { text: 'بي سي', value: 'بي سي' }
+        ];
+
+        const gameModes = [
+            { text: 'كويك بلاي', value: 'كويك بلاي' },
+            { text: 'كومبتتيف', value: 'كومبتتيف' }
+        ];
+
+        let selectedCharacter = null;
+        let selectedRank = null;
+
+        const characterGrid = document.getElementById('character-grid');
+        const rankGrid = document.getElementById('rank-grid');
+        const roleSelect = document.getElementById('role-select');
+        const platformSelect = document.getElementById('platform-select');
+        const gamemodeSelect = document.getElementById('gamemode-select');
+        const nameInput = document.getElementById('name-input');
+        const printBtn = document.getElementById('print-btn');
+        const cardToPrint = document.getElementById('card-to-print');
+        const loader = document.getElementById('loader');
+
+        // Function to convert an image URL to a Base64 data URL
+        async function imageToBase64(url) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.crossOrigin = 'Anonymous'; // Important for CORS if images were from different origin, good practice for local too
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    resolve(canvas.toDataURL('image/png')); // Convert to PNG data URL
+                };
+                img.onerror = (error) => {
+                    console.error(`Failed to load image for Base64 conversion: ${url}`, error);
+                    // Provide a transparent 1x1 pixel fallback on error
+                    resolve('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='); 
+                };
+                img.src = url;
+            });
+        }
+
+        function populateGrids() {
+            // Populate characters
+            characters.forEach(char => {
+                const item = document.createElement('div');
+                item.className = 'grid-item';
+                item.innerHTML = `<img src="hero-icons/${char.path}" alt="${char.name}"><span class="text-sm font-bold">${char.name}</span>`;
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('#character-grid .grid-item').forEach(el => el.classList.remove('selected'));
+                    item.classList.add('selected');
+                    selectedCharacter = char;
+                });
+                characterGrid.appendChild(item);
+            });
+
+            // Populate ranks
+            ranks.forEach(rank => {
+                const item = document.createElement('div');
+                item.className = 'grid-item';
+                item.innerHTML = `<img src="rank-photos/${rank.path}" alt="${rank.arabic}"><span class="text-sm font-bold">${rank.arabic}</span>`;
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('#rank-grid .grid-item').forEach(el => el.classList.remove('selected'));
+                    item.classList.add('selected');
+                    selectedRank = rank;
+                });
+                rankGrid.appendChild(item);
+            });
+        }
+
+        function populateDropdowns() {
+            roles.forEach(role => {
+                const option = document.createElement('option');
+                option.value = role.value;
+                option.textContent = role.text;
+                roleSelect.appendChild(option);
+            });
+            platforms.forEach(platform => {
+                const option = document.createElement('option');
+                option.value = platform.value;
+                option.textContent = platform.text;
+                platformSelect.appendChild(option);
+            });
+            gameModes.forEach(mode => {
+                const option = document.createElement('option');
+                option.value = mode.value;
+                option.textContent = mode.text;
+                gamemodeSelect.appendChild(option);
+            });
+        }
+
+        async function generateCardContent() { 
+            const userName = nameInput.value || 'اسمك هنا';
+            const characterName = selectedCharacter ? `الشخصية: ${selectedCharacter.name}` : 'الشخصية: لم يتم الاختيار';
+            const characterImgSrc = selectedCharacter ? `hero-icons/${selectedCharacter.path}` : '';
+            const rankText = selectedRank ? `الرانك: ${selectedRank.arabic}` : 'الرانك: لم يتم الاختيار';
+            const rankImgSrc = selectedRank ? `rank-photos/${selectedRank.path}` : ''; 
+            const roleText = `الرول: ${roleSelect.value}`;
+            const platformText = `المنصة: ${platformSelect.value}`;
+            const gamemodeText = `المود: ${gamemodeSelect.value}`;
+
+            document.getElementById('card-user-name').textContent = userName;
+            document.getElementById('card-character-name').textContent = characterName;
+
+            if (characterImgSrc) {
+                const base64Char = await imageToBase64(characterImgSrc);
+                document.getElementById('card-character-img').src = base64Char;
+            } else {
+                document.getElementById('card-character-img').src = ''; 
+            }
+
+            document.getElementById('card-rank-text').textContent = rankText;
+            if (rankImgSrc) {
+                const base64Rank = await imageToBase64(rankImgSrc);
+                document.getElementById('card-rank-img').src = base64Rank;
+            } else {
+                document.getElementById('card-rank-img').src = ''; 
+            }
+
+            document.getElementById('card-platform').textContent = platformText;
+            document.getElementById('card-role').textContent = roleText;
+            document.getElementById('card-gamemode').textContent = gamemodeText;
+        }
+
+        function waitForImagesToLoad(element) {
+            const images = element.querySelectorAll('img');
+            const promises = [];
+
+            images.forEach(img => {
+                if (!img.complete) {
+                    promises.push(new Promise((resolve, reject) => {
+                        img.onload = resolve;
+                        img.onerror = reject;
+                    }));
+                }
+            });
+            return Promise.all(promises);
+        }
+        
+        async function downloadCard() {
+            if (!selectedCharacter || !selectedRank) {
+                const messageBox = document.createElement('div');
+                messageBox.style.cssText = `
+                    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                    background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;
+                    padding: 20px; border-radius: 8px; z-index: 1001;
+                    font-size: 1.1rem; text-align: center;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                `;
+                messageBox.textContent = 'الرجاء اختيار شخصية ورتبة قبل طباعة البطاقة.';
+                document.body.appendChild(messageBox);
+                setTimeout(() => {
+                    document.body.removeChild(messageBox);
+                }, 3000);
+                return;
+            }
+
+            loader.style.display = 'flex';
+
+            await generateCardContent();
+
+            // Temporarily make the card visible off-screen for html2canvas to capture
+            cardToPrint.style.position = 'fixed';
+            cardToPrint.style.left = '0px';
+            cardToPrint.style.top = '-9999px';
+            cardToPrint.style.opacity = '1'; // Ensure it's fully visible to html2canvas
+
+            try {
+                await waitForImagesToLoad(cardToPrint);
+
+                const canvas = await html2canvas(cardToPrint, {
+                    width: 1011,
+                    height: 639,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: null,
+                    scale: 1 // Use scale 1 for direct pixel capture as per card dimensions
+                });
+
+                const dataUrl = canvas.toDataURL("image/png");
+                const link = document.createElement('a');
+                link.download = 'rivals-card.png';
+                link.href = dataUrl;
+                link.click();
+
+            } catch (err) {
+                console.error("html2canvas error:", err);
+                const messageBox = document.createElement('div');
+                messageBox.style.cssText = `
+                    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                    background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;
+                    padding: 20px; border-radius: 8px; z-index: 1001;
+                    font-size: 1.1rem; text-align: center;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                `;
+                messageBox.textContent = 'حدث خطأ أثناء طباعة البطاقة. يرجى المحاولة مرة أخرى.';
+                document.body.appendChild(messageBox);
+                setTimeout(() => {
+                    document.body.removeChild(messageBox);
+                }, 5000);
+            } finally {
+                // Reset card position and visibility regardless of success or failure
+                cardToPrint.style.position = 'absolute'; // Revert to original position type
+                cardToPrint.style.left = '-9999px';
+                cardToPrint.style.top = '-9999px';
+                cardToPrint.style.opacity = '0'; // Hide it again
+                loader.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            populateGrids();
+            populateDropdowns();
+            printBtn.addEventListener('click', downloadCard);
+        });
+
+    </script>
+</body>
+</html>
