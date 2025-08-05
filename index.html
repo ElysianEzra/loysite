@@ -16,10 +16,10 @@
             font-family: 'Noto Sans Arabic', sans-serif;
             background-color: #0b0b14; /* Dark blue background color */
             background-image: radial-gradient(circle at 10% 20%, rgba(96, 165, 250, 0.2) 1px, transparent 1px),
-                              radial-gradient(circle at 70% 80%, rgba(96, 165, 250, 0.2) 1px, transparent 1px),
-                              radial-gradient(circle at 40% 50%, rgba(96, 165, 250, 0.2) 1px, transparent 1px),
-                              radial-gradient(circle at 90% 10%, rgba(96, 165, 250, 0.2) 1px, transparent 1px),
-                              radial-gradient(circle at 20% 90%, rgba(96, 165, 250, 0.2) 1px, transparent 1px);
+                                 radial-gradient(circle at 70% 80%, rgba(96, 165, 250, 0.2) 1px, transparent 1px),
+                                 radial-gradient(circle at 40% 50%, rgba(96, 165, 250, 0.2) 1px, transparent 1px),
+                                 radial-gradient(circle at 90% 10%, rgba(96, 165, 250, 0.2) 1px, transparent 1px),
+                                 radial-gradient(circle at 20% 90%, rgba(96, 165, 250, 0.2) 1px, transparent 1px);
             background-size: 20px 20px; /* Adjust as needed for star density */
             display: flex;
             flex-direction: column;
@@ -142,10 +142,10 @@
             /* Updated background for the card */
             background-color: #4a148c; /* Dark purple background */
             background-image: radial-gradient(circle at 15% 25%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-                              radial-gradient(circle at 85% 75%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-                              radial-gradient(circle at 40% 60%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-                              radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-                              radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+                                 radial-gradient(circle at 85% 75%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                                 radial-gradient(circle at 40% 60%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                                 radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                                 radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
             background-size: 30px 30px; /* Adjust for star density and size */
         }
 
@@ -445,7 +445,7 @@
             { text: 'كومبتتيف', value: 'كومبتتيف' }
         ];
 
-        let selectedCharacter = null;
+        // selectedCharacter is no longer needed as we'll get all selected characters
         let selectedRank = null;
 
         const characterGrid = document.getElementById('character-grid');
@@ -458,7 +458,13 @@
         const cardToPrint = document.getElementById('card-to-print');
         const loader = document.getElementById('loader');
 
-        // Function to convert an image URL to a Base64 data URL (still needed for grid selection images)
+        /**
+         * Converts an image URL to a Base64 data URL.
+         * This is useful for images that might not be directly accessible via CORS
+         * when html2canvas tries to render them, or for embedding images directly.
+         * @param {string} url - The URL of the image.
+         * @returns {Promise<string>} A promise that resolves with the Base64 data URL.
+         */
         async function imageToBase64(url) {
             return new Promise((resolve, reject) => {
                 const img = new Image();
@@ -481,27 +487,35 @@
             });
         }
 
+        /**
+         * Populates the character and rank selection grids.
+         * For characters, it enables multi-selection by toggling the 'selected' class.
+         * For ranks, it maintains single selection.
+         */
         function populateGrids() {
-            // Populate characters
+            // Populate characters - Now allows multi-selection
             characters.forEach(char => {
                 const item = document.createElement('div');
                 item.className = 'grid-item';
+                // Store character name in a data attribute for easy retrieval
+                item.dataset.characterName = char.name; 
                 item.innerHTML = `<img src="${char.path}" alt="${char.name}"><span class="text-sm font-bold">${char.name}</span>`;
                 item.addEventListener('click', () => {
-                    document.querySelectorAll('#character-grid .grid-item').forEach(el => el.classList.remove('selected'));
-                    item.classList.add('selected');
-                    selectedCharacter = char;
+                    // Toggle the 'selected' class on click
+                    item.classList.toggle('selected');
                 });
                 characterGrid.appendChild(item);
             });
 
-            // Populate ranks
+            // Populate ranks - Still single selection
             ranks.forEach(rank => {
                 const item = document.createElement('div');
                 item.className = 'grid-item';
                 item.innerHTML = `<img src="${rank.path}" alt="${rank.arabic}"><span class="text-sm font-bold">${rank.arabic}</span>`;
                 item.addEventListener('click', () => {
+                    // Remove 'selected' from all other rank items
                     document.querySelectorAll('#rank-grid .grid-item').forEach(el => el.classList.remove('selected'));
+                    // Add 'selected' to the clicked rank item
                     item.classList.add('selected');
                     selectedRank = rank;
                 });
@@ -509,6 +523,9 @@
             });
         }
 
+        /**
+         * Populates the role, platform, and gamemode dropdowns.
+         */
         function populateDropdowns() {
             roles.forEach(role => {
                 const option = document.createElement('option');
@@ -530,112 +547,125 @@
             });
         }
 
+        /**
+         * Updates the content of the hidden card element based on user selections.
+         * This function is called before html2canvas captures the card.
+         */
         async function generateCardContent() { 
             const userName = nameInput.value || 'اسمك هنا';
-            const characterName = selectedCharacter ? `الشخصية: ${selectedCharacter.name}` : 'الشخصية: لم يتم الاختيار';
+
+            // Get all selected characters and join their names with a comma
+            const selectedCharactersElements = document.querySelectorAll('#character-grid .grid-item.selected');
+            const characterNames = Array.from(selectedCharactersElements).map(el => el.dataset.characterName);
+            const characterNameText = characterNames.length > 0 
+                ? `الشخصيات: ${characterNames.join(', ')}` 
+                : 'الشخصية: لم يتم الاختيار';
+
             const rankText = selectedRank ? `الرانك: ${selectedRank.arabic}` : 'الرانك: لم يتم الاختيار';
             const roleText = `الرول: ${roleSelect.value}`;
             const platformText = `المنصة: ${platformSelect.value}`;
             const gamemodeText = `المود: ${gamemodeSelect.value}`;
 
-            // Update text content for the span elements
+            // Update text content for the span elements within the card
             document.querySelector('#card-platform .tab-text').textContent = platformText;
             document.querySelector('#card-rank .tab-text').textContent = rankText;
             document.querySelector('#card-role .tab-text').textContent = roleText;
             document.querySelector('#card-gamemode .tab-text').textContent = gamemodeText;
 
             document.getElementById('card-user-name').textContent = userName;
-            document.getElementById('card-character-name').textContent = characterName;
+            document.getElementById('card-character-name').textContent = characterNameText;
         }
 
-        function waitForImagesToLoad(element) {
-            // This function is now only relevant for the grid selection images, not the card output
-            const images = element.querySelectorAll('img');
-            const promises = [];
+        /**
+         * Displays a custom message box instead of alert().
+         * @param {string} message - The message to display.
+         * @param {string} type - 'error' or 'info' to style the box.
+         */
+        function showMessageBox(message, type = 'error') {
+            const messageBox = document.createElement('div');
+            let backgroundColor, textColor, borderColor;
 
-            images.forEach(img => {
-                if (!img.complete) {
-                    promises.push(new Promise((resolve, reject) => {
-                        img.onload = resolve;
-                        img.onerror = reject; 
-                    }));
-                }
-            });
-            return Promise.all(promises);
-        }
-        
-        async function downloadCard() {
-            if (!selectedCharacter || !selectedRank) {
-                const messageBox = document.createElement('div');
-                messageBox.style.cssText = `
-                    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-                    background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;
-                    padding: 20px; border-radius: 8px; z-index: 1001;
-                    font-size: 1.1rem; text-align: center;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                `;
-                messageBox.textContent = 'الرجاء اختيار شخصية ورتبة قبل طباعة البطاقة.';
-                document.body.appendChild(messageBox);
-                setTimeout(() => {
+            if (type === 'error') {
+                backgroundColor = '#f8d7da';
+                textColor = '#721c24';
+                borderColor = '#f5c6cb';
+            } else { // type === 'info' or default
+                backgroundColor = '#d1ecf1';
+                textColor = '#0c5460';
+                borderColor = '#bee5eb';
+            }
+
+            messageBox.style.cssText = `
+                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                background-color: ${backgroundColor}; color: ${textColor}; border: 1px solid ${borderColor};
+                padding: 20px; border-radius: 8px; z-index: 1001;
+                font-size: 1.1rem; text-align: center;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                max-width: 80%; /* Ensure it's responsive */
+                box-sizing: border-box;
+            `;
+            messageBox.textContent = message;
+            document.body.appendChild(messageBox);
+            setTimeout(() => {
+                if (document.body.contains(messageBox)) {
                     document.body.removeChild(messageBox);
-                }, 3000);
+                }
+            }, 3000);
+        }
+
+        /**
+         * Downloads the generated card as a PNG image.
+         */
+        async function downloadCard() {
+            const selectedCharacters = document.querySelectorAll('#character-grid .grid-item.selected');
+            if (selectedCharacters.length === 0 || !selectedRank) {
+                showMessageBox('الرجاء اختيار شخصية ورتبة واحدة على الأقل قبل طباعة البطاقة.', 'error');
                 return;
             }
 
-            loader.style.display = 'flex';
+            loader.style.display = 'flex'; // Show loading spinner
 
-            await generateCardContent(); 
+            await generateCardContent(); // Update card content before capturing
 
-            // Temporarily make the card visible off-screen for html2canvas to capture
+            // Temporarily make the card visible (but off-screen) for html2canvas to capture correctly
             cardToPrint.style.position = 'fixed'; 
-            cardToPrint.style.left = '0px';
-            cardToPrint.style.top = '-9999px';
-            cardToPrint.style.opacity = '1'; 
+            cardToPrint.style.left = '0px'; // Move it to the left edge (still off-screen due to negative top)
+            cardToPrint.style.top = '-9999px'; // Keep it far off-screen vertically
+            cardToPrint.style.opacity = '1'; // Ensure it's fully opaque for capture
 
             try {
+                // A small delay can sometimes help html2canvas capture the latest DOM state
                 await new Promise(resolve => setTimeout(resolve, 50)); 
-                // No need to wait for images inside cardToPrint as they are removed
-                // await waitForImagesToLoad(cardToPrint); 
-
+                
                 const canvas = await html2canvas(cardToPrint, {
                     width: 1011,
                     height: 639,
-                    useCORS: true, 
-                    allowTaint: true, 
-                    backgroundColor: null,
-                    scale: 1 
+                    useCORS: true, // Enable CORS support for images
+                    allowTaint: true, // Allow images from other origins to be drawn onto the canvas
+                    backgroundColor: null, // Transparent background if needed
+                    scale: 1 // Capture at 1:1 scale
                 });
 
                 const dataUrl = canvas.toDataURL("image/png");
                 const link = document.createElement('a');
                 link.download = 'rivals-card.png';
                 link.href = dataUrl;
-                link.click();
+                link.click(); // Programmatically click the link to trigger download
 
             } catch (err) {
                 console.error("html2canvas error:", err);
-                const messageBox = document.createElement('div');
-                messageBox.style.cssText = `
-                    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-                    background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;
-                    padding: 20px; border-radius: 8px; z-index: 1001;
-                    font-size: 1.1rem; text-align: center;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                `;
-                messageBox.textContent = 'حدث خطأ أثناء طباعة البطاقة. يرجى المحاولة مرة أخرى.';
-                document.body.appendChild(messageBox);
-                setTimeout(() => {
-                    document.body.removeChild(messageBox);
-                }, 5000);
+                showMessageBox('حدث خطأ أثناء طباعة البطاقة. يرجى المحاولة مرة أخرى.', 'error');
             } finally {
+                // Reset card position and opacity after capture
                 cardToPrint.style.position = 'absolute'; 
                 cardToPrint.style.left = '-9999px';
                 cardToPrint.style.top = '-9999px';
                 cardToPrint.style.opacity = '0';
-                loader.style.display = 'none';
+                loader.style.display = 'none'; // Hide loading spinner
             }
         }
 
+        // Initialize grids and dropdowns when the DOM is fully loaded
         document.addEventListener('DOMContentLoaded', () => {
             populateGrids();
             populateDropdowns();
